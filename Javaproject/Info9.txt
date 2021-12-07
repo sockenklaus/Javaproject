@@ -1,0 +1,37 @@
+9
+Andy Borders
+200
+250
+400
+John Smith
+120
+220
+330
+Alvin Smith
+225
+300
+278
+Mike Borell
+250
+250
+500
+Jim Jones
+325
+325
+155
+Robert Fennel
+200
+150
+350
+Craig Fenner
+230
+220
+480
+Bill Johnson
+120
+150
+220
+Brent Garland
+220
+240
+350
