@@ -3,21 +3,41 @@ import java.util.ArrayList;
 import java.io.*;
 public class MainMethod{
 	public static void main(String[] args) {
-		ArrayList<Integer> nums = new ArrayList<Integer>();
-		ArrayList<String> Name = new ArrayList<String>();
+		ArrayList<Integer> scores = new ArrayList<Integer>();
+		//ArrayList<String> students = new ArrayList<String>();
+
 		Scanner in = new Scanner(System.in);
 		System.out.print("Please enter the FULL path of the file ");
-		String file = in.nextLine();
+		String fileName = in.nextLine();
+
 		try {
-			File data = new File(file);
+			File data = new File(fileName);
 			Scanner dat = new Scanner(data);
-			while(dat.hasNextLine()){
+
+			if(dat.hasNextLine()){
+				/**
+				 * The first line of your input file contains (i assume) the number of students.
+				 * You ignore this information. Why not use it?
+				 */
 				String line = dat.nextLine();
-				if(NumTest(line) && line.length() >=2) {
-					nums.add(Integer.parseInt(line));
-				}
-				else if(line.length() >= 2) {
-					Name.add(line);
+				/**
+				 * Only parse the file if the first line contains an Integer, which should mean the number of students (i assume!)
+				 * Of the first line contains anything else, the file has the wrong format so skip all the rest...
+				 */
+				if(isInteger(line)) {
+					int numberOfStudents = Integer.parseInt(line);
+
+					Student[] students = new Student[numberOfStudents];
+
+					while(dat.hasNextLine()){
+						line = dat.nextLine();
+						if(isInteger(line)) {
+							scores.add(Integer.parseInt(line));
+						}
+						else if(line.length() >= 2) {
+							students.add(line);
+						}
+					}
 				}
 			}
 			dat.close();
@@ -28,27 +48,50 @@ public class MainMethod{
 			System.out.print("The file could not be found please enter a new path");
 			
 		}
-		format(roster(nums, Name));
+		format(roster(scores, students));
 	}
 	
-	public static boolean NumTest(String var) {
-			try {
-				Integer.parseInt(var);
-				return true;
-			}
-			catch(NumberFormatException e) {
-			}
+	/**
+	 * Use comprehensible function names.
+	 * A function name that returns a boolean should ask a question.
+	 * 
+	 * i.e.: Is this variable an Integer? Yes / No
+	 * 
+	 * @param var
+	 * @return
+	 */
+	private static boolean isInteger(String var) {
+		try {
+			Integer.parseInt(var);
+		}
+		catch(NumberFormatException e) {
+			/**
+			 * You should return false in your catch-clause because that's the point where the error is handled
+			 */
 			return false;
 		}
-		public static Student[] roster(ArrayList<Integer> scores, ArrayList<String> names){
-			Student[] roster = new Student[names.size()];
-			int s = 0;
-			for(int x = 0; x < names.size(); x++) {
-					roster[x] = new Student(names.get(x), scores.get(s),scores.get((s)+1),scores.get((s)+2));
-					s +=3;
-			}
-			return roster;
+		catch(NullPointerException e) {
+			/**
+			 * Catch NullPointerException because this is thrown by parseInt() is var is null
+			 */
+			return false;
 		}
+		/**
+		 * return true if no error was catched.
+		 */
+		return true;
+		
+	}
+
+	public static Student[] roster(ArrayList<Integer> scores, ArrayList<String> names){
+		Student[] roster = new Student[names.size()];
+		int s = 0;
+		for(int x = 0; x < names.size(); x++) {
+			roster[x] = new Student(names.get(x), scores.get(s),scores.get((s)+1),scores.get((s)+2));
+			s +=3;
+		}
+		return roster;
+	}
 		
 		public static void format(Student[] print) {
 			System.out.println("Name" + "\t" + "\t"+ "\t" + " \t Score 1" + "\t" + " \t Score 2" + "\t"+ " \t Score 3 \t \t" + "Total" );
