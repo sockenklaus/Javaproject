@@ -1,10 +1,7 @@
 import java.util.Scanner;
-import java.util.ArrayList;
 import java.io.*;
 public class MainMethod{
 	public static void main(String[] args) {
-		ArrayList<Integer> scores = new ArrayList<Integer>();
-		//ArrayList<String> students = new ArrayList<String>();
 
 		Scanner in = new Scanner(System.in);
 		System.out.print("Please enter the FULL path of the file ");
@@ -25,19 +22,93 @@ public class MainMethod{
 				 * Of the first line contains anything else, the file has the wrong format so skip all the rest...
 				 */
 				if(isInteger(line)) {
+					
+					/**
+					 * I do the parsing and printing in one step.
+					 * although neglible in the real world, my method is much faster because 
+					 * i only iterate once (one step per line of input file), while you iterate three times (?)
+					 * to achive the same...
+					 * 
+					 * first i define all variables i will use as follows:
+					 */
 					int numberOfStudents = Integer.parseInt(line);
+					int highestScore = 0;
+					String highestStudent = "";
+					int lowestScore = Integer.MAX_VALUE;
+					String lowestStudent = "";
+					int totalScore = 0;
 
-					Student[] students = new Student[numberOfStudents];
+					/**
+					 * col, sum and currentName are only temporary to save values used in a single line of output.
+					 */
+					int col = 0;
+					int sum = 0;
+					String currentName = ""; 
+
+					/**
+					 * print your header
+					 */
+					System.out.println("Name" + "\t \t \t" + "Score 1" + "\t \t" + "Score 2" + "\t \t"+ "Score 3" + "\t \t" + "Total" );
 
 					while(dat.hasNextLine()){
 						line = dat.nextLine();
+
+						/**
+						 * If the current line contains an integer, print it, add the value to the row-sum
+						 * and increase col by one
+						 */
 						if(isInteger(line)) {
-							scores.add(Integer.parseInt(line));
+							System.out.print("\t \t" + line);
+							sum += Integer.parseInt(line);
+							col += 1;
 						}
-						else if(line.length() >= 2) {
-							students.add(line);
+						/**
+						 * if there's no integer we assume a string.
+						 * Print string and save it in variable
+						 * 
+						 * Attention: this will fail if the file provided contains line other
+						 * than integer or string, for example float.
+						 */
+						else {
+							currentName = line;
+							System.out.print(currentName);
+						}
+
+						/**
+						 * If col reaches 3, which means we arrive at the end of our  output,
+						 * check if the current sum is a new high or low and save the corresponding
+						 * name.
+						 * 
+						 * Also print sum, save total (used for average) and reset sum and col.
+						 */
+						if(col == 3){
+							if(sum > highestScore) {
+								highestScore = sum;
+								highestStudent = currentName;
+							}
+							if(sum < lowestScore) {
+								lowestScore = sum;
+								lowestStudent = currentName;
+							}
+
+							System.out.print("\t \t"+sum);
+							System.out.println();
+
+							totalScore += sum;
+							col = 0;
+							sum = 0;
 						}
 					}
+
+					/**
+					 * simply print the footer.
+					 * i removed your vertical lines because thats two unnecessary loops in my eyes.
+					 */
+					System.out.println();
+					System.out.println("There are " + numberOfStudents + " students in the class");
+					System.out.println("The average total score is: " + totalScore / numberOfStudents);
+					System.out.println("The highest score set by " + highestStudent + " is " + highestScore);
+					System.out.println("The lowest score set by " + lowestStudent+ " is " + lowestScore);
 				}
 			}
 			dat.close();
@@ -48,7 +119,7 @@ public class MainMethod{
 			System.out.print("The file could not be found please enter a new path");
 			
 		}
-		format(roster(scores, students));
+		// format(roster(scores, students));
 	}
 	
 	/**
@@ -83,7 +154,14 @@ public class MainMethod{
 		
 	}
 
-	public static Student[] roster(ArrayList<Integer> scores, ArrayList<String> names){
+	/**
+	 * 
+	 * Following stuff is not necessary. You are just iterating over the same data over and over again...
+	 * 
+	 */
+
+
+	/* public static Student[] roster(ArrayList<Integer> scores, ArrayList<String> names){
 		Student[] roster = new Student[names.size()];
 		int s = 0;
 		for(int x = 0; x < names.size(); x++) {
@@ -129,5 +207,5 @@ public class MainMethod{
 			for(int i = 0; i < 110;i++) {
 				System.out.print("_");
 			}
-		}
+		} */
 	}

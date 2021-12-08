@@ -1,4 +1,8 @@
-public class Student{
+/**
+ * Student class is not necessary.
+ */
+
+/* public class Student{
 	public String name;
 	public int ScoreOne;
 	public int ScoreTwo;
@@ -9,4 +13,4 @@ public class Student{
 		ScoreTwo = Score2;
 		ScoreThree = Score3;
 	}
-}
+} */
